@@ -1,0 +1,24 @@
+version: "3"
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+      - ./db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+      TZ: Asia/Tokyo
+    ports:
+      - 15432:5432
+  api:
+    restart: always
+    build:
+      context: .
+    environment:
+      DNS: "postgres://test:test@db:5432/testdb"
+    ports:
+      - "8989:8989"
+    depends_on:
+      - db
