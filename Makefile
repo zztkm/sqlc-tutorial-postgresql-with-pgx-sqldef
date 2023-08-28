@@ -5,6 +5,10 @@ GOBIN ?= $(shell go env GOPATH)/bin
 up:
 	docker compose up -d --build --force-recreate
 
+.PHONY: stop
+stop:
+	docker compose stop
+
 .PHONY: down
 down:
 	docker compose down
