@@ -1,10 +1,17 @@
-# Example sqlc with pgx
+# Example sqlc with pgx and sqldef
 
 refs:
 - [Getting started with PostgreSQL — sqlc 1.20.0 documentation](https://docs.sqlc.dev/en/stable/tutorials/getting-started-postgresql.html)
 - [Using Go and pgx — sqlc 1.20.0 documentation](https://docs.sqlc.dev/en/stable/guides/using-go-and-pgx.html)
 - https://github.com/k0kubun/sqldef
 - [Dockerfileで対象プラットフォームによって処理分岐させる](https://zenn.dev/ytdrep/articles/d65c26201042eb)
+- [sqlc と pgxpool でトランザクション](https://zenn.dev/shiguredo/articles/sqlc-pgxpool-transaction)
+
+
+## TODO
+
+- [ ] このプロジェクトの [Connect](https://connectrpc.com/docs/go/getting-started/) 版を作る
+- [ ] main.go が分厚いのでダイエットさせる (root dir に移動させる)
 
 ## Requirements
 

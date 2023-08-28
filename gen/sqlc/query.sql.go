@@ -76,7 +76,7 @@ func (q *Queries) ListAuthors(ctx context.Context) ([]Author, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Author
+	items := []Author{}
 	for rows.Next() {
 		var i Author
 		if err := rows.Scan(
@@ -95,10 +95,28 @@ func (q *Queries) ListAuthors(ctx context.Context) ([]Author, error) {
 	return items, nil
 }
 
+const lockAuthor = `-- name: LockAuthor :one
+select id, name, age, bio from authors
+where id = $1 LIMIT 1 FOR UPDATE NOWAIT
+`
+
+func (q *Queries) LockAuthor(ctx context.Context, id int64) (Author, error) {
+	row := q.db.QueryRow(ctx, lockAuthor, id)
+	var i Author
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Age,
+		&i.Bio,
+	)
+	return i, err
+}
+
 const updateAuthor = `-- name: UpdateAuthor :one
 update authors
 	set name = $2,
-	bio = $3
+	bio = $3,
+	age = $4
 where id = $1
 returning id, name, age, bio
 `
@@ -107,10 +125,16 @@ type UpdateAuthorParams struct {
 	ID   int64       `json:"id"`
 	Name string      `json:"name"`
 	Bio  pgtype.Text `json:"bio"`
+	Age  int32       `json:"age"`
 }
 
 func (q *Queries) UpdateAuthor(ctx context.Context, arg UpdateAuthorParams) (Author, error) {
-	row := q.db.QueryRow(ctx, updateAuthor, arg.ID, arg.Name, arg.Bio)
+	row := q.db.QueryRow(ctx, updateAuthor,
+		arg.ID,
+		arg.Name,
+		arg.Bio,
+		arg.Age,
+	)
 	var i Author
 	err := row.Scan(
 		&i.ID,

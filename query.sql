@@ -2,6 +2,10 @@
 select * from authors
 where id = $1 LIMIT 1;
 
+-- name: LockAuthor :one
+select * from authors
+where id = $1 LIMIT 1 FOR UPDATE NOWAIT;
+
 -- name: ListAuthors :many
 select * from authors
 order by name;
@@ -17,7 +21,8 @@ returning *;
 -- name: UpdateAuthor :one
 update authors
 	set name = $2,
-	bio = $3
+	bio = $3,
+	age = $4
 where id = $1
 returning *;
 
