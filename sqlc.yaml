@@ -19,7 +19,7 @@ sql:
     - plugin: "py"
       out: "./pyapi/src/gen/sqlc"
       options:
-        package: "sqlc"
+        package: "."
         emit_sync_querier: true
         emit_async_querier: true
         query_parameter_limit: 10
