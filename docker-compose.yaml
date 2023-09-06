@@ -17,8 +17,18 @@ services:
     build:
       context: .
     environment:
-      DNS: "postgres://test:test@db:5432/testdb"
+      DNS: "postgresql://test:test@db:5432/testdb"
     ports:
       - "8989:8989"
+    depends_on:
+      - db
+  pyapi:
+    restart: always
+    build:
+      context: pyapi
+    environment:
+      DNS: "postgresql://test:test@db:5432/testdb"
+    ports:
+      - "8100:8100"
     depends_on:
       - db
